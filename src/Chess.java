@@ -15,6 +15,7 @@ public class Chess{
     };
     static int whiteKingPosition, blackKingPosition;
     static int GLOBALDEPTH = 4;
+
     public static void main(String[] args){
         while ('A' != board[whiteKingPosition/8][whiteKingPosition%8].charAt(0)) {
             whiteKingPosition++;            
@@ -22,20 +23,23 @@ public class Chess{
         while ('a' != board[blackKingPosition/8][blackKingPosition%8].charAt(0)) {
             blackKingPosition++;            
         }
-        // JFrame frame = new JFrame("The Jimmy Destroyer");
-        // frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // frame.add(new ChessUI());
-        // frame.setSize(500,500);
-        // frame.setResizable(false);
-        // frame.setVisible(true);
+        JFrame frame = new JFrame("The Jimmy Destroyer");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        ChessUI ui = new ChessUI();
+        frame.add(ui);
+        frame.setSize(600,600);
+        frame.setResizable(false);
+        frame.setVisible(true);
         
-        /*
+        makeMove(alphaBeta(GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));
+        
+    }  
+
+    public static void printBoard(){
         for (int i = 0; i < 8; i++) {
             System.out.println(Arrays.toString(board[i]));
-        }*/
-        // System.out.println(possibleMoves());
-        System.out.println(alphaBeta(GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));
-    }  
+        }
+    }
 
     public static String alphaBeta(int depth, int beta, int alpha, String move, int player){
         String list  = possibleMoves();
@@ -80,7 +84,21 @@ public class Chess{
     }
     
     public static void flipBoard(){
+        String temp;
+        for (int i = 0; i < board.length/2; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                temp = board[i][j];
+                board[i][j] = changeCase(board[7-i][7-j].charAt(0));
+                board[7-i][7-j] = changeCase(temp.charAt(0));
+            }
+        }
+        int kingTemp = whiteKingPosition;
+        whiteKingPosition = 63-blackKingPosition;
+        blackKingPosition = 63-kingTemp;
+    }
 
+    public static String changeCase(char letter){
+        return (!Character.isUpperCase(letter))?Character.toString(Character.toUpperCase(letter)):Character.toString(Character.toLowerCase(letter));
     }
 
     public static int rating(){
@@ -95,10 +113,13 @@ public class Chess{
         if(move.charAt(4)!='P'){
             board[x2][y2]=board[x1][y1];
             board[x1][y1]=" ";
+            if("A".equals(board[x2][y2])){
+                whiteKingPosition = 8*x2+y2;
+            }
         }
         else{
             board[1][x1]=" ";
-            board[0][y1]=Integer.toString(y2);
+            board[0][y1]=move.substring(3, 4);
         }
     }
     public static void undoMove(String move) {
@@ -109,6 +130,9 @@ public class Chess{
         if(move.charAt(4)!='P'){
             board[x1][y1]=board[x2][y2];
             board[x2][y2]=move.substring(4);
+            if("A".equals(board[x2][y2])){
+                whiteKingPosition = 8*x2+y2;
+            }
         }
         else{
             board[1][x1]="P";
