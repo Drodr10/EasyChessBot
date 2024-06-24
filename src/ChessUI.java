@@ -15,7 +15,7 @@ public class ChessUI extends JPanel implements MouseListener, MouseMotionListene
         g.fillRect(x, y, 100, 200);
         g.setColor(Color.red);
         g.fillRect(50, 10, 10, 20);
-        Image chessPieceImage = new ImageIcon("ChessPiecesArray.png").getImage();
+        Image chessPieceImage = new ImageIcon("lib/ChessPiecesArray.png").getImage();
         g.drawImage(chessPieceImage, x, 0, x+100, 100, x, 0, x+100, 100, this);
     }
 

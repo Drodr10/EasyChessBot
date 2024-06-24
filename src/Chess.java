@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Chess{
     static String[][] board  = {
@@ -13,6 +14,7 @@ public class Chess{
         {"R","K","B","Q","A","B","K","R"}
     };
     static int whiteKingPosition, blackKingPosition;
+    static int GLOBALDEPTH = 4;
     public static void main(String[] args){
         while ('A' != board[whiteKingPosition/8][whiteKingPosition%8].charAt(0)) {
             whiteKingPosition++;            
@@ -27,12 +29,63 @@ public class Chess{
         // frame.setResizable(false);
         // frame.setVisible(true);
         
-        
+        /*
         for (int i = 0; i < 8; i++) {
             System.out.println(Arrays.toString(board[i]));
-        }
-        System.out.println(possibleMoves());
+        }*/
+        // System.out.println(possibleMoves());
+        System.out.println(alphaBeta(GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));
     }  
+
+    public static String alphaBeta(int depth, int beta, int alpha, String move, int player){
+        String list  = possibleMoves();
+        if (depth == 0 || list.length() == 0) return move+(rating()*(player*2-1));
+        player = 1 - player;
+        for (int i = 0; i < list.length(); i+=5) {
+            String sub = list.substring(i,i+5);
+            makeMove(sub);
+            flipBoard();
+            String returnString = alphaBeta(depth-1, beta, alpha, sub, player);
+            int value = Integer.parseInt(returnString.substring(5));
+            flipBoard();
+            undoMove(sub);
+            if (player == 0) {
+                if (value <= beta) {
+                    beta = value;
+                    if (depth == GLOBALDEPTH) {
+                        move = returnString.substring(0, 5);
+                    }
+                }   
+            } else if (value > alpha) {
+                alpha = value;
+                if (depth == GLOBALDEPTH) {
+                    move = returnString.substring(0, 5);
+                }
+            } 
+            if (alpha >= beta){
+                if (player == 0) {
+                    return move+beta;
+                }
+                else{
+                    return move + alpha;
+                }
+            }
+        }
+        if (player == 0 ) {
+            return move + beta;
+        }
+        else{
+            return move + alpha;
+        }
+    }
+    
+    public static void flipBoard(){
+
+    }
+
+    public static int rating(){
+        return 0;
+    }
     
     public static void makeMove(String move) {
         int x1 = Character.getNumericValue(move.charAt(0));
