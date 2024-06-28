@@ -14,7 +14,9 @@ public class Chess{
         {"R","K","B","Q","A","B","K","R"}
     };
     static int whiteKingPosition, blackKingPosition;
-    static int GLOBALDEPTH = 4;
+    static final int GLOBALDEPTH = 4;
+    static int humanColor= -1;// WHITE = 1, BLACK = 0
+
 
     public static void main(String[] args){
         while ('A' != board[whiteKingPosition/8][whiteKingPosition%8].charAt(0)) {
@@ -31,15 +33,20 @@ public class Chess{
         frame.setResizable(false);
         frame.setVisible(true);
         
-        makeMove(alphaBeta(GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));
+        Object[] option = {"Computer", "Human"};
+        humanColor = JOptionPane.showOptionDialog(null, "Who should play as white?", "Computer Settings", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[1]);
+        if (humanColor == 0) {
+            makeMove(alphaBeta(GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));    
+            flipBoard();
+            frame.repaint();
+        }else{
+
+        }
+        
         
     }  
 
-    public static void printBoard(){
-        for (int i = 0; i < 8; i++) {
-            System.out.println(Arrays.toString(board[i]));
-        }
-    }
+    
 
     public static String alphaBeta(int depth, int beta, int alpha, String move, int player){
         String list  = possibleMoves();
@@ -101,10 +108,7 @@ public class Chess{
         return (!Character.isUpperCase(letter))?Character.toString(Character.toUpperCase(letter)):Character.toString(Character.toLowerCase(letter));
     }
 
-    public static int rating(){
-        return 0;
-    }
-    
+   
     public static void makeMove(String move) {
         int x1 = Character.getNumericValue(move.charAt(0));
         int y1 = Character.getNumericValue(move.charAt(1));
@@ -118,8 +122,8 @@ public class Chess{
             }
         }
         else{
-            board[1][x1]=" ";
-            board[0][y1]=move.substring(3, 4);
+            board[1][Character.getNumericValue(move.charAt(0))]=" ";
+            board[0][Character.getNumericValue(move.charAt(1))]=String.valueOf(move.charAt(3));
         }
     }
     public static void undoMove(String move) {
@@ -130,16 +134,23 @@ public class Chess{
         if(move.charAt(4)!='P'){
             board[x1][y1]=board[x2][y2];
             board[x2][y2]=move.substring(4);
-            if("A".equals(board[x2][y2])){
-                whiteKingPosition = 8*x2+y2;
+            if("A".equals(board[x1][y1])){
+                whiteKingPosition = 8*x1+y1;
             }
         }
         else{
             board[1][x1]="P";
-            board[0][y1]=Integer.toString(x2);
+            board[0][y1]=String.valueOf(move.charAt(2));
         }
     }
-    
+     public static int rating(){
+        return 0;
+    }
+    public static void printBoard(){
+        for (int i = 0; i < 8; i++) {
+            System.out.println(Arrays.toString(board[i]));
+        }
+    }
     public static String possibleMoves(){
         StringBuilder list = new StringBuilder();
         for(int i = 0; i < 64; i++){
@@ -169,7 +180,7 @@ public class Chess{
         return list.toString();
     }
     
-    private static String possibleA(int i) {
+    public static String possibleA(int i) {
         StringBuilder list = new StringBuilder();
         String oldPiece = "";
         int r=i/8, c = i%8;
@@ -199,7 +210,7 @@ public class Chess{
         }
         return list.toString();
     }
-    private static boolean kingSafe() {
+    public static boolean kingSafe() {
         int temp = 1;
         for (int i = -1; i <= 1; i+=2) {
             for (int j = -1; j <= 1; j+=2) {
@@ -215,17 +226,21 @@ public class Chess{
         }
         for (int i = -1; i <= 1; i+=2) {
             try {
+                while (' '==board[whiteKingPosition/8][whiteKingPosition%8+temp*i].charAt(0)){temp++;}
                 if('r'==board[whiteKingPosition/8][whiteKingPosition%8+temp*i].charAt(0)||
                     'q'==board[whiteKingPosition/8][whiteKingPosition%8+temp*i].charAt(0) ){
                     return false;
                 }
             } catch (Exception e) {}
+            temp = 1;
             try {
+                while (' '==board[whiteKingPosition/8+temp*i][whiteKingPosition%8].charAt(0)){temp++;}
                 if('r'==board[whiteKingPosition/8+temp*i][whiteKingPosition%8].charAt(0)||
                     'q'==board[whiteKingPosition/8+temp*i][whiteKingPosition%8].charAt(0) ){
                     return false;
                 }
             } catch (Exception e) {}
+            temp = 1;
         }
         for (int i = -1; i <= 1; i+=2) {
             for (int j = -1; j <= 1; j+=2) {
@@ -262,7 +277,7 @@ public class Chess{
         }
         return true;
     }
-    private static String possibleQ(int i) {
+    public static String possibleQ(int i) {
         StringBuilder list = new StringBuilder();
         String oldPiece = "";
         int temp = 1;
@@ -307,7 +322,7 @@ public class Chess{
         }
         return list.toString();
     }
-    private static Object possibleB(int i) {
+    public static Object possibleB(int i) {
         StringBuilder list = new StringBuilder();
         String oldPiece = "";
         int temp = 1;
@@ -351,7 +366,7 @@ public class Chess{
         }
         return list.toString();
     }
-    private static String possibleR(int i) {
+    public static String possibleR(int i) {
         StringBuilder list = new StringBuilder();
         String oldPiece;
         int temp = 1;
@@ -425,7 +440,7 @@ public class Chess{
         }
         return list.toString();
     }
-    private static String possibleK(int i) {
+    public static String possibleK(int i) {
         StringBuilder list = new StringBuilder();
         String oldPiece;
         int r=i/8;
@@ -470,7 +485,7 @@ public class Chess{
         }
         return list.toString();
     }
-    private static String possibleP(int i) {
+    public static String possibleP(int i) {
         StringBuilder list = new StringBuilder();
         String oldPiece;
         int r=i/8;

@@ -104,10 +104,14 @@ public class ChessUI extends JPanel implements MouseListener, MouseMotionListene
                     dragMove = ""+mouseY/squareSize+mouseX/squareSize+newMouseY/squareSize+newMouseX/squareSize+Chess.board[newMouseY/squareSize][newMouseX/squareSize];
                 }
                 String possibleMoves = Chess.possibleMoves();
-                System.out.println(possibleMoves+"\nAttempted Move: "+ dragMove);
                 if (possibleMoves.contains(dragMove)) {
-                    System.out.println("Move done!");
                     Chess.makeMove(dragMove);
+                    Chess.flipBoard();
+                    Chess.printBoard();
+                    System.out.println(Chess.possibleMoves());
+                    Chess.makeMove(Chess.alphaBeta(Chess.GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));
+                    Chess.flipBoard();
+                    repaint();
                 }
             }
             repaint();
