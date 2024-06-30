@@ -11,7 +11,7 @@ public class ChessUI extends JPanel implements MouseListener, MouseMotionListene
         this.setBackground(Color.ORANGE);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-
+ 
         for (int i = 0; i < 64; i+=2) {
             g.setColor(new Color(255, 200, 100));
             g.fillRect((i%8+i/8%2)*squareSize, i/8*squareSize, squareSize, squareSize);
@@ -25,51 +25,51 @@ public class ChessUI extends JPanel implements MouseListener, MouseMotionListene
             switch(Chess.board[i/8][i%8]){
                 case "P":  
                     j=5;
-                    k=1;
+                    k=Chess.humanColor;
                     break;
                 case "p":  
                     j=5;
-                    k=0;
+                    k=1-Chess.humanColor;
                     break;
                 case "R":
                     j=2;
-                    k=1;
+                    k=Chess.humanColor;
                     break;
                 case "r":
                     j=2;
-                    k=0;
+                    k=1-Chess.humanColor;
                     break;
                 case "K":
                     j=3;
-                    k=1;
+                    k=Chess.humanColor;
                     break;
                 case "k":
                     j=3;
-                    k=0;
+                    k=1-Chess.humanColor;
                     break;
                 case "B":
                     j=4;
-                    k=1;
+                    k=Chess.humanColor;
                     break;
                 case "b":
                     j=4;
-                    k=0;
+                    k=1-Chess.humanColor;
                     break;
                 case "Q":
                     j=0;
-                    k=1;
+                    k=Chess.humanColor;
                     break;
                 case "q":
                     j=0;
-                    k=0;
+                    k=1-Chess.humanColor;
                     break;
                 case "A":
                     j=1;
-                    k=1;
+                    k=Chess.humanColor;
                     break;
                 case "a":
                     j=1;
-                    k=0;
+                    k=1-Chess.humanColor;
                     break;
                 default:
                     break;

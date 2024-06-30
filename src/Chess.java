@@ -36,21 +36,45 @@ public class Chess{
         Object[] option = {"Computer", "Human"};
         humanColor = JOptionPane.showOptionDialog(null, "Who should play as white?", "Computer Settings", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, option, option[1]);
         if (humanColor == 0) {
+            long startTime = System.currentTimeMillis();
             makeMove(alphaBeta(GLOBALDEPTH, Integer.MAX_VALUE, Integer.MIN_VALUE, "", 0));    
+            long endTime = System.currentTimeMillis();
+            System.out.println("Time elapsed(ms): " + (endTime-startTime));
             flipBoard();
             frame.repaint();
-        }else{
-
         }
         
         
     }  
 
-    
+    public static String sortMoves(String list){
+        int[] score = new int[list.length()/5];
+        for (int i = 0; i < list.length(); i+=5) {
+            makeMove(list.substring(i, i+5));
+            score[i/5] = -Rating.rating(-1, 0);
+            undoMove(list.substring(i, i+5));
+        }
+        StringBuilder newListA = new StringBuilder();
+        String newListB = list;
+        for (int i = 0; i < Math.min(6,list.length()/5); i++) {
+            int max = -1000000, maxLocation = 0;
+            for (int j = 0; j < list.length()/5; j++) {
+                if (score[j]>max) {
+                    max = score[j];
+                    maxLocation = j;
+                }
+            }
+            score[maxLocation]=-1000000;
+            newListA.append(list.substring(maxLocation*5, maxLocation*5+5));
+            newListB = newListB.replace(list.substring(maxLocation*5, maxLocation*5+5), "");
+        }
+        return newListA.append(newListB).toString();
+    }
 
     public static String alphaBeta(int depth, int beta, int alpha, String move, int player){
         String list  = possibleMoves();
-        if (depth == 0 || list.length() == 0) return move+(rating()*(player*2-1));
+        if (depth == 0 || list.length() == 0) return move+(Rating.rating(list.length(),depth)*(player*2-1));
+        list = sortMoves(list);
         player = 1 - player;
         for (int i = 0; i < list.length(); i+=5) {
             String sub = list.substring(i,i+5);
@@ -142,9 +166,6 @@ public class Chess{
             board[1][x1]="P";
             board[0][y1]=String.valueOf(move.charAt(2));
         }
-    }
-     public static int rating(){
-        return 0;
     }
     public static void printBoard(){
         for (int i = 0; i < 8; i++) {
@@ -265,9 +286,10 @@ public class Chess{
                     return false;
                 }
             } catch (Exception e) {}
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
-                    if(i==0&&j==0)continue;
+        }
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if(i!=0||j!=0){
                     try {
                         if('a'==board[whiteKingPosition/8+i][whiteKingPosition%8+j].charAt(0))
                             return false;
