@@ -1,21 +1,6 @@
-## Getting Started
-
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
-
 # EasyChessBot
-## INCOMPLETE
+This bot is a proof of concept and a way to let me understand the requirements to make a chess bot. It uses simple, understandable, but inefficient methods of implementing things (like having a 2d String array as board storage).
+
+Credits to [Logic Crazy Chess](https://www.youtube.com/@LogicCrazyChess) for his tutorial on making a chess engine.
+## Complete(ly lacking)
+Take a look at this [better](https://github.com/Drodr10/BetterChess) one if you already know what you're doing.
